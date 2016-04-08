@@ -1,6 +1,6 @@
 /*********************** HNIT 3103 Application Team **************************
  * 文 件 名 ：main.c
- * 描    述 ：液晶显示    
+ * 描    述 ：OV7725_DCMI摄像头驱动  
  * 实验平台 ：STM32F407开发板
  * 库 版 本 ：ST1.4.0
  * 时    间 ：2016.3.19
@@ -8,13 +8,16 @@
  * 修改记录 ：无
 ******************************************************************************/
 
+//BUG Attention : disnum 不可以显示数字0
+
 #include "stm32_sys.h"
 #include "stm32_delay.h"
 #include "stm32_usart.h"
 #include "hnit_led.h" 
 #include "hnit_key.h"
 #include "hnit_lcd.h"
-
+#include "hnit_ov7725.h"
+#include "hnit_sccb.h"
 u16 imgData[80][80] = {0};
 
 /*****************************************************************************
@@ -30,25 +33,18 @@ int main(void)
     
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	Delay_Init(168);
-    USART1_Init(115200);		
+    USART1_Init(115200);	
+	
     LCD_Init();
     LED_Init();
     KEY_Init();
+    SCCB_GPIO_Config();    // IN MODE
+    LCD_Clear(BLACK); 
+    POINT_COLOR = WHITE; BACK_COLOR = BLACK; 
     
-    LCD_Clear(BLACK);   
-    POINT_COLOR = BLACK;	
-    BACK_COLOR = WHITE;
-    
-    while(KEY0 == 1);
-    
-    imgData[0][0] = 1;
-    imgData[79][0] = 1;
-    imgData[0][79] = 1;
-    imgData[79][79] = 1;
-    
-    LCD_DisImg(imgData);
-    LCD_DisNum(50,50,66666);
-
+	while(Ov7725_Init() != SUCCESS);
+   
+//    LCD_DisImg(imgData);  
     while(1)
     {
         LED0 = ~LED0;
