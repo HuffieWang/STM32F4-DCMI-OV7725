@@ -8,8 +8,6 @@
  * 修改记录 ：无
 ******************************************************************************/
 
-//BUG Attention : disnum 不可以显示数字0
-
 #include "stm32_sys.h"
 #include "stm32_delay.h"
 #include "stm32_usart.h"
@@ -28,9 +26,7 @@ u16 imgData[80][80] = {0};
 *	返 回 值: 错误代码
 ******************************************************************************/	
 int main(void)
-{
-	u32 t = 0;
-    
+{  
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	Delay_Init(168);
     USART1_Init(115200);	
@@ -38,18 +34,17 @@ int main(void)
     LCD_Init();
     LED_Init();
     KEY_Init();
-    SCCB_GPIO_Config();    // IN MODE
+    SCCB_GPIO_Config();    
     LCD_Clear(BLACK); 
     POINT_COLOR = WHITE; BACK_COLOR = BLACK; 
-    
-	while(Ov7725_Init() != SUCCESS);
+      
+//	while(Ov7725_Init() != SUCCESS);
    
 //    LCD_DisImg(imgData);  
     while(1)
     {
         LED0 = ~LED0;
-		Delay_ms(500);
-		t++;
+        Delay_ms(500);
 	}
 }
 
