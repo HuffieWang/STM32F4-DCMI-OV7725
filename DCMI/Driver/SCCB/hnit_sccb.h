@@ -3,14 +3,14 @@
 
 #include "stm32_sys.h"
 
-#define SCL_H         GPIO_SetBits(GPIOC , GPIO_Pin_1) 
-#define SCL_L         GPIO_ResetBits(GPIOC , GPIO_Pin_1) 
+#define SCL_H         GPIO_SetBits(GPIOD , GPIO_Pin_6) 
+#define SCL_L         GPIO_ResetBits(GPIOD , GPIO_Pin_6) 
    
-#define SDA_H         GPIO_SetBits(GPIOC , GPIO_Pin_2) 
-#define SDA_L         GPIO_ResetBits(GPIOC , GPIO_Pin_2) 
+#define SDA_H         GPIO_SetBits(GPIOD , GPIO_Pin_7) 
+#define SDA_L         GPIO_ResetBits(GPIOD , GPIO_Pin_7) 
 
-#define SCL_read      GPIO_ReadInputDataBit(GPIOC , GPIO_Pin_1) 
-#define SDA_read      GPIO_ReadInputDataBit(GPIOC , GPIO_Pin_2) 
+#define SCL_read      GPIO_ReadInputDataBit(GPIOD , GPIO_Pin_6) 
+#define SDA_read      GPIO_ReadInputDataBit(GPIOD , GPIO_Pin_7) 
 
 #define ADDR_OV7725   0x42
 

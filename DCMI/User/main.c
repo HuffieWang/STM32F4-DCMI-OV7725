@@ -16,7 +16,6 @@
 #include "hnit_lcd.h"
 #include "hnit_ov7725.h"
 #include "hnit_sccb.h"
-u16 imgData[80][80] = {0};
 
 /*****************************************************************************
 *	函 数 名: main
@@ -28,23 +27,36 @@ u16 imgData[80][80] = {0};
 int main(void)
 {  
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-	Delay_Init(168);
+	delay_init(168);
     USART1_Init(115200);	
-	
+ 
     LCD_Init();
     LED_Init();
     KEY_Init();
-    SCCB_GPIO_Config();    
+    SCCB_GPIO_Config();
+    ov7725_gpio_config();
+    
     LCD_Clear(BLACK); 
-    POINT_COLOR = WHITE; BACK_COLOR = BLACK; 
-      
-//	while(Ov7725_Init() != SUCCESS);
-   
-//    LCD_DisImg(imgData);  
+    POINT_COLOR = WHITE; BACK_COLOR = BLACK;   
+	while(Ov7725_Init() != SUCCESS);
+    
+    /*
+    //TODO2 设置为RGB565模式
+	OV2640_RGB565_Mode();	
+    
+    //TODO3 DCMI配置 attention：此处是LCD外设地址
+	My_DCMI_Init();			
+	DCMI_DMA_Init((u32)&LCD->LCD_RAM,1,DMA_MemoryDataSize_HalfWord,DMA_MemoryInc_Disable);
+    
+    //TODO4 分别率设置
+ 	OV2640_OutSize_Set(lcddev.width,lcddev.height); 
+    */
+    
+//  LCD_DisImg(imgData);
     while(1)
-    {
+    {    
         LED0 = ~LED0;
-        Delay_ms(500);
+        delay_ms(500);
 	}
 }
 

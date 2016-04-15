@@ -9,9 +9,9 @@
 //修改说明
 //无
 ////////////////////////////////////////////////////////////////////////////////// 	 
-void Delay_Init(u8 SYSCLK);
-void Delay_ms(u16 nms);
-void Delay_us(u32 nus);
+void delay_init(u8 SYSCLK);
+void delay_ms(u16 nms);
+void delay_us(u32 nus);
 
 #endif
 

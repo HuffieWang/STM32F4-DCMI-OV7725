@@ -1,9 +1,20 @@
 #ifndef __OV7725_H
 #define __OV7725_H
 #include "stm32_sys.h"
-		
-#define OV7725_ID       0x21
 
+#define PCLK  PAin(6)   //ÏñËØ
+#define HERF  PAin(4)   //ÐÐ
+#define VSYNC PBin(7)   //³¡
+
+#define XCLK  PAin(8)
+
+        
+#define OV7725_ID       0x21
+typedef struct Reg
+{
+	uint8_t Address;			       /*¼Ä´æÆ÷µØÖ·*/
+	uint8_t Value;		           /*¼Ä´æÆ÷Öµ*/
+}Reg_Info;
 /* ¼Ä´æÆ÷ºê¶¨Òå */
 #define GAIN      0x00
 
@@ -159,12 +170,7 @@
 #define SIGN      0xAB
 #define DSPAuto   0xAC
 
-typedef struct Reg
-{
-	uint8_t Address;			       /*¼Ä´æÆ÷µØÖ·*/
-	uint8_t Value;		           /*¼Ä´æÆ÷Öµ*/
-}Reg_Info;
 
 ErrorStatus Ov7725_Init(void);
-
+void ov7725_gpio_config(void);
 #endif

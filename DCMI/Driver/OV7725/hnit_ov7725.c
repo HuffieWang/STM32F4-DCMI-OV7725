@@ -110,6 +110,23 @@ Reg_Info Sensor_Config[] =
 
 u8 OV7725_REG_NUM = sizeof(Sensor_Config)/sizeof(Sensor_Config[0]);	  /*结构体数组成员数目*/
 
+void ov7725_gpio_config(void)
+{
+    GPIO_InitTypeDef  GPIO_InitStructure;
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB, ENABLE);  
+    //A4-HREF A6-PCLK A8-XCLK
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_6 | GPIO_Pin_8;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;         
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;        
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;    
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;          
+    GPIO_Init(GPIOA, &GPIO_InitStructure);     
+    //B7-VSYNC
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+    GPIO_Init(GPIOB, &GPIO_InitStructure); 
+    
+}
+
 /*****************************************************************************
 *	函 数 名: 
 *	功    能: 
@@ -156,6 +173,7 @@ ErrorStatus Ov7725_Init(void)
 	//DEBUG("ov7725 Register Config Success");
 	return SUCCESS;
 }
+
 
 
 /******************************* END OF FILE *********************************/

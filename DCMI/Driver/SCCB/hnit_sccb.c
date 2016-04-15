@@ -23,17 +23,17 @@
 void SCCB_GPIO_Config(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure; 
-    /* SCL(PC1)、SDA(PC2)管脚配置 */
+    /* SCL(PD6)、SDA(PD7)管脚配置 */
        
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);  //使能GPIOC时钟
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);  //使能GPIOC时钟
     
-    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_1 | GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_6 | GPIO_Pin_7;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;         //普通输出模式
     GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;        //开漏输出
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;     //100MHz
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;          //上拉
     
-    GPIO_Init(GPIOC, &GPIO_InitStructure);                //初始化
+    GPIO_Init(GPIOD, &GPIO_InitStructure);                //初始化
 }
 
 /********************************************************************
