@@ -366,7 +366,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\FwLib\inc;..\System;..\System\delay;..\System\sys;..\System\usart;..\User;..\Driver\LED;..\Driver\KEY;..\Driver\LCD;..\Driver\SCCB;..\Driver\OV7725</IncludePath>
+              <IncludePath>..\Core;..\FwLib\inc;..\System;..\System\delay;..\System\sys;..\System\usart;..\User;..\Driver\LED;..\Driver\KEY;..\Driver\LCD;..\Driver\SCCB;..\Driver\OV7725;..\Driver\DCMI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -653,6 +653,11 @@
               <FileName>hnit_ov7725.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Driver\OV7725\hnit_ov7725.c</FilePath>
+            </File>
+            <File>
+              <FileName>hnit_dcmi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\DCMI\hnit_dcmi.c</FilePath>
             </File>
           </Files>
         </Group>

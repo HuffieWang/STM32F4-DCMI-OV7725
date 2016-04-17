@@ -14,8 +14,8 @@
 
 #define ADDR_OV7725   0x42
 
-void SCCB_GPIO_Config(void);
-int SCCB_WriteByte( u16 WriteAddress , u8 SendByte);
-int SCCB_ReadByte(u8* pBuffer,   u16 length,   u8 ReadAddress);
+void sccb_gpio_config(void);
+int sccb_write_byte( u16 WriteAddress , u8 SendByte);
+int sccb_read_byte(u8* pBuffer,   u16 length,   u8 ReadAddress);
 
 #endif 

@@ -14,9 +14,13 @@
 #include "hnit_led.h" 
 #include "hnit_key.h"
 #include "hnit_lcd.h"
-#include "hnit_ov7725.h"
-#include "hnit_sccb.h"
 
+#include "hnit_sccb.h"
+#include "hnit_ov7725.h"
+#include "hnit_dcmi.h"
+
+u16 imgData[80][80] = {0};
+uint16_t n = 0; 
 /*****************************************************************************
 *	函 数 名: main
 *	功    能: c程序入口
@@ -28,35 +32,31 @@ int main(void)
 {  
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	delay_init(168);
-    USART1_Init(115200);	
- 
-    LCD_Init();
-    LED_Init();
-    KEY_Init();
-    SCCB_GPIO_Config();
-    ov7725_gpio_config();
+    usart1_init(115200);	
     
-    LCD_Clear(BLACK); 
-    POINT_COLOR = WHITE; BACK_COLOR = BLACK;   
-	while(Ov7725_Init() != SUCCESS);
+    lcd_init();
+    LCD_Scan_Dir(5);
+    led_init();
+    key_init();
+    sccb_gpio_config();   
     
-    /*
-    //TODO2 设置为RGB565模式
-	OV2640_RGB565_Mode();	
+  	dcmi_config();	
     
-    //TODO3 DCMI配置 attention：此处是LCD外设地址
-	My_DCMI_Init();			
-	DCMI_DMA_Init((u32)&LCD->LCD_RAM,1,DMA_MemoryDataSize_HalfWord,DMA_MemoryInc_Disable);
+	dcmi_dma_init((u32)&LCD->LCD_RAM, 8, DMA_MemoryDataSize_HalfWord, DMA_MemoryInc_Disable);
+   
+    lcd_clear(BLACK); 
+    POINT_COLOR = WHITE; 
+    BACK_COLOR = BLACK; 
+       
+	while(ov7725_init() != SUCCESS);
     
-    //TODO4 分别率设置
- 	OV2640_OutSize_Set(lcddev.width,lcddev.height); 
-    */
-    
-//  LCD_DisImg(imgData);
+    LCD_WriteRAM_Prepare();   // 开始写入GRAM 
+    dcmi_start();
+    //lcd_show_image(imgData); 
     while(1)
     {    
-        LED0 = ~LED0;
-        delay_ms(500);
+//        delay_ms(500);
+//        LED0 = ~LED0;
 	}
 }
 

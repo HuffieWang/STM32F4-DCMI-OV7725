@@ -17,7 +17,7 @@
 *	形    参：无
 *	返 回 值: 无
 ******************************************************************************/	
-void KEY_Init(void)
+void key_init(void)
 {    	 
     GPIO_InitTypeDef  GPIO_InitStructure;
 

@@ -6,6 +6,6 @@
 #define KEY0 PEin(4)	// KEY0
 #define KEY1 PEin(3)	// KEY1	 
 
-void KEY_Init(void);
+void key_init(void);
 
 #endif

@@ -42,5 +42,6 @@
 ..\obj\main.o: ..\Driver\KEY\hnit_key.h
 ..\obj\main.o: ..\Driver\LCD\hnit_lcd.h
 ..\obj\main.o: D:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h
-..\obj\main.o: ..\Driver\OV7725\hnit_ov7725.h
 ..\obj\main.o: ..\Driver\SCCB\hnit_sccb.h
+..\obj\main.o: ..\Driver\OV7725\hnit_ov7725.h
+..\obj\main.o: ..\Driver\DCMI\hnit_dcmi.h

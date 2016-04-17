@@ -4,8 +4,8 @@
 #include "stdlib.h"
 
 
-void LCD_DisImg(u16 m[80][80]);
-void LCD_DisNum(u16 x, u16 y, u32 num);
+void lcd_show_image(u16 m[80][80]);
+void lcd_show_num(u16 y, u16 x, u32 num);
 
 /****************** 以下为正点原子lcd.h源码 www.opendv.com *******************/
 //LCD重要参数集
@@ -83,10 +83,10 @@ typedef struct
 #define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
 #define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)
 	    															  
-void LCD_Init(void);													   	//初始化
+void lcd_init(void);													   	//初始化
 void LCD_DisplayOn(void);													//开显示
 void LCD_DisplayOff(void);													//关显示
-void LCD_Clear(u16 Color);	 												//清屏
+void lcd_clear(u16 color);	 												//清屏
 void LCD_SetCursor(u16 Xpos, u16 Ypos);										//设置光标
 void LCD_DrawPoint(u16 x,u16 y);											//画点
 void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color);								//快速画点

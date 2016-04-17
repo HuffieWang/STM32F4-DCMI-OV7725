@@ -17,7 +17,7 @@
 *	形    参：无
 *	返 回 值: 无
 ******************************************************************************/	
-void LED_Init(void)
+void led_init(void)
 {    	 
     GPIO_InitTypeDef  GPIO_InitStructure;
 

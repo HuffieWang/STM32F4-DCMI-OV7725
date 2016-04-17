@@ -23,13 +23,13 @@ u16 BACK_COLOR=0xFFFF;  //背景色
 _lcd_dev lcddev;        //LCD管理重要参数
 
 /*****************************************************************************
-*	函 数 名: LCD_DisImg
+*	函 数 名: lcd_show_image
 *	功    能: 9倍稀疏的240*240黑白图像显示
 *   调用函数：LCD_SetCursor(); LCD_WriteRAM_Prepare();   
 *	形    参：m[80][80] 图像数据
 *	返 回 值: 无
 ******************************************************************************/	
-void LCD_DisImg(u16 m[80][80])
+void lcd_show_image(u16 m[80][80])
 {  
 	u16 i, j, n;
     
@@ -59,13 +59,13 @@ void LCD_DisImg(u16 m[80][80])
 }  
 
 /*****************************************************************************
-*	函 数 名: LCD_DisNum
+*	函 数 名: lcd_show_image
 *	功    能: LCD显示数字，大小16，模式填充
 *   调用函数：LCD_Pow(); LCD_ShowChar();   
 *	形    参：x 起点行坐标; y 起点列坐标; num 要显示的数字
 *	返 回 值: 无
 ******************************************************************************/	
-void LCD_DisNum(u16 y, u16 x, u32 num)
+void lcd_show_num(u16 y, u16 x, u32 num)
 {  
     u8 len = 0, size = 16;  
 	u8 t, temp;   
@@ -263,7 +263,7 @@ void LCD_SetCursor(u16 Xpos, u16 Ypos)
 		LCD_WriteReg(lcddev.setycmd, Ypos);
 	}	 
 } 	
-
+  
 //设置LCD的自动扫描方向
 //注意:其他函数可能会受到此函数设置的影响(尤其是9341/6804这两个奇葩),
 //所以,一般设置为L2R_U2D即可,如果设置为其他扫描方式,可能导致显示不正常.
@@ -589,7 +589,7 @@ void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height)
 //初始化lcd
 //该初始化函数可以初始化各种ILI93XX液晶,但是其他函数是基于ILI9320的!!!
 //在其他型号的驱动芯片上没有测试! 
-void LCD_Init(void)
+void lcd_init(void)
 { 	
 	vu32 i=0;
 	
@@ -2603,12 +2603,12 @@ void LCD_Init(void)
 	}		 
 	LCD_Display_Dir(0);		 	//默认为竖屏
 	LCD_LED=1;					//点亮背光
-	LCD_Clear(WHITE);
+	lcd_clear(WHITE);
 }  
 
 //清屏函数
 //color:要清屏的填充色
-void LCD_Clear(u16 color)
+void lcd_clear(u16 color)
 {
 	u32 index=0;      
 	u32 totalpoint=lcddev.width;

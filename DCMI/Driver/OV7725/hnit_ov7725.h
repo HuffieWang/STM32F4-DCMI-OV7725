@@ -171,6 +171,5 @@ typedef struct Reg
 #define DSPAuto   0xAC
 
 
-ErrorStatus Ov7725_Init(void);
-void ov7725_gpio_config(void);
+ErrorStatus ov7725_init(void);
 #endif

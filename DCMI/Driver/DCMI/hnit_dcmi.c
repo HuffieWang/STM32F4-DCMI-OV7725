@@ -1,31 +1,65 @@
 #include "stm32_sys.h"
 #include "hnit_dcmi.h" 
 #include "hnit_led.h" 
-
-//#include "lcd.h" 
-//#include "ov2640.h" 
-
+#include "hnit_lcd.h"
 u8 ov_frame=0;  						//帧率
-//extern void jpeg_data_process(void);	//JPEG数据处理函数
+static uint16_t line_num =0;
+
 
 //DCMI中断服务函数
 void DCMI_IRQHandler(void)
 {
 	if(DCMI_GetITStatus(DCMI_IT_FRAME)==SET)//捕获到一帧图像
 	{
-//		jpeg_data_process(); 	//jpeg数据处理	
+        LCD_SetCursor(0, 0);  // 设置光标位置                   
+        LCD_WriteRAM_Prepare();   // 开始写入GRAM     
 		DCMI_ClearITPendingBit(DCMI_IT_FRAME);//清除帧中断
-		LED1 = !LED1;
-		ov_frame++;  
+		ov_frame++; 
+      //  dcmi_stop();
 	}
 } 
+
+
+////使用帧中断重置line_num,可防止有时掉数据的时候DMA传送行数出现偏移
+//void DCMI_IRQHandler(void)
+//{
+
+//	if(  DCMI_GetITStatus (DCMI_IT_FRAME) == SET )    
+//	{
+//		/*传输完一帧*/
+//		line_num=0;
+//		fps++; //帧率计数
+//		
+//		DCMI_ClearITPendingBit(DCMI_IT_FRAME); 
+//	}
+//}
+
+void DMA2_Stream1_IRQHandler(void)
+{
+    if(DMA_GetITStatus(DMA2_Stream1,DMA_IT_TCIF1) == SET)    
+    {
+        LED1 = 0;
+//		line_num++;
+
+//    if(line_num==out_height)
+//		{
+//			/*传输完一帧*/
+//			line_num=0;
+//		}
+//		
+//		/*DMA 一行一行传输*/
+//    OV2640_DMA_Config(FSMC_LCD_ADDRESS+(out_width*2*(out_height-line_num-1)),out_width/2);
+        DMA_ClearITPendingBit(DMA2_Stream1,DMA_IT_TCIF1);
+	}
+}
+
 
 //DCMI DMA配置
 //DMA_Memory0BaseAddr:存储器地址    将要存储摄像头数据的内存地址(也可以是外设地址)
 //DMA_BufferSize:存储器长度    0~65535
 //DMA_MemoryDataSize:存储器位宽    @DMA_MemoryDataSize_Byte/_HalfWord/_Word
 //DMA_MemoryInc:存储器增长方式  @DMA_MemoryInc_Enable/_Disable
-void DCMI_DMA_Init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize,u32 DMA_MemoryDataSize,u32 DMA_MemoryInc)
+void dcmi_dma_init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize,u32 DMA_MemoryDataSize,u32 DMA_MemoryInc)
 { 
     DMA_InitTypeDef  DMA_InitStructure;
 	
@@ -50,10 +84,13 @@ void DCMI_DMA_Init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize,u32 DMA_MemoryData
     DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;//外设突发单次传输
     DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;//存储器突发单次传输
     DMA_Init(DMA2_Stream1, &DMA_InitStructure);//初始化DMA Stream	
+    //DMA_Cmd(DMA2_Stream1,ENABLE);
+   // while(DMA_GetCmdStatus(DMA2_Stream1) != ENABLE){}
+        
 }
 
 //DCMI初始化
-void My_DCMI_Init(void)
+void dcmi_config(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
     NVIC_InitTypeDef NVIC_InitStructure;
@@ -69,7 +106,7 @@ void My_DCMI_Init(void)
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
     GPIO_Init(GPIOA, &GPIO_InitStructure);
-	
+	   
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7|GPIO_Pin_6;
     GPIO_Init(GPIOB, &GPIO_InitStructure);	
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_11;
@@ -97,29 +134,34 @@ void My_DCMI_Init(void)
     DCMI_InitStructure.DCMI_HSPolarity= DCMI_HSPolarity_Low;//HSYNC 低电平有效
     DCMI_InitStructure.DCMI_PCKPolarity= DCMI_PCKPolarity_Rising;//PCLK 上升沿有效
     DCMI_InitStructure.DCMI_SynchroMode= DCMI_SynchroMode_Hardware;//硬件同步HSYNC,VSYNC
-    DCMI_InitStructure.DCMI_VSPolarity=DCMI_VSPolarity_Low;//VSYNC 低电平有效
+    DCMI_InitStructure.DCMI_VSPolarity=DCMI_VSPolarity_High;//VSYNC 低电平有效
     DCMI_Init(&DCMI_InitStructure);
-
-    DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);//开启帧中断 
 	
-    DCMI_Cmd(ENABLE);	//DCMI使能
+    NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn ;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
+    DMA_ITConfig(DMA2_Stream1,DMA_IT_TC,ENABLE); 
 
     NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;//抢占优先级1
     NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		//子优先级3
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
     NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
+    DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);//开启帧中断 
 } 
 
 //DCMI,启动传输
-void DCMI_Start(void)
+void dcmi_start(void)
 {  
+    DCMI_Cmd(ENABLE);	//DCMI使能
     DMA_Cmd(DMA2_Stream1, ENABLE);//开启DMA2,Stream1 
     DCMI_CaptureCmd(ENABLE);//DCMI捕获使能  
 }
 
 //DCMI,关闭传输
-void DCMI_Stop(void)
+void dcmi_stop(void)
 { 
     DCMI_CaptureCmd(DISABLE);//DCMI捕获使关闭
     while(DCMI->CR&0X01);		//等待传输结束  	
