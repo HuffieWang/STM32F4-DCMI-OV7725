@@ -7,13 +7,12 @@
  * 作    者 ：3103创新团队
  * 修改记录 ：无
 ******************************************************************************/
-
 #include "hnit_ov7725.h"
 #include "hnit_sccb.h"
-#include "hnit_lcd.h"
+#include "hnit_dcmi.h"
 
 /* 寄存器参数配置 */
-Reg_Info Sensor_Config[] =
+Reg_Info sensor_config[] =
 {
   	{0x32,0x00},
 	{0x2a,0x00},
@@ -29,11 +28,7 @@ Reg_Info Sensor_Config[] =
     
    
 	{0x67,0x00},    
-//   {0x3a,0x04}, 
-//   {0x67,0xc0}, 
-//   {0x68,0x80}, 
-
-   
+ 
 	{0x69,0x50},  		
 	{0x13,0xff},
 	{0x0d,0x41},
@@ -111,21 +106,21 @@ Reg_Info Sensor_Config[] =
 	{0x00,0x00},
 	{0x00,0x60},   				
 };
-u8 OV7725_REG_NUM = sizeof(Sensor_Config)/sizeof(Sensor_Config[0]);	  /*结构体数组成员数目*/
+u8 OV7725_REG_NUM = sizeof(sensor_config)/sizeof(sensor_config[0]);	  /*结构体数组成员数目*/
 
 
-/*****************************************************************************
-*	函 数 名: 
-*	功    能: 
-*   调用函数：
-*	形    参：无
-*	返 回 值: 无
-******************************************************************************/	
+/**
+  * @brief  OV7725摄像头初始化
+  * @param  无
+  * @retval SUCCESS: 成功
+  *         ERROR  : 失败
+  */
 ErrorStatus ov7725_init(void)
 {
 	uint16_t i = 0;
 	uint8_t Sensor_IDCode = 0;	
-	    
+    
+    sccb_gpio_config();  
 	//DEBUG("ov7725 Register Config Start......");
 	   
 	if( 0 == sccb_write_byte ( 0x12, 0x80 ) ) /*复位sensor */
@@ -146,7 +141,7 @@ ErrorStatus ov7725_init(void)
 	{
 		for( i = 0 ; i < OV7725_REG_NUM ; i++ )
 		{
-			if( 0 == sccb_write_byte(Sensor_Config[i].Address, Sensor_Config[i].Value) )
+			if( 0 == sccb_write_byte(sensor_config[i].Address, sensor_config[i].Value) )
 			{      
 				//DEBUG("write reg faild", Sensor_Config[i].Address);
 				return ERROR;

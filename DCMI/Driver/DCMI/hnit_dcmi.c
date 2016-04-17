@@ -1,65 +1,57 @@
+/*********************** HNIT 3103 Application Team **************************
+ * 文 件 名 ：hnit_dcmi.c
+ * 描    述 ：DCMI配置    
+ * 实验平台 ：STM32F407开发板
+ * 库 版 本 ：ST1.4.0
+ * 时    间 ：2016.04.08
+ * 作    者 ：3103创新团队
+ * 修改记录 ：无
+******************************************************************************/
 #include "stm32_sys.h"
 #include "hnit_dcmi.h" 
 #include "hnit_led.h" 
 #include "hnit_lcd.h"
+
 u8 ov_frame=0;  						//帧率
-static uint16_t line_num =0;
 
-
-//DCMI中断服务函数
+/**
+  * @brief  一帧图像接收完毕，LCD光标回到初始位置
+  * @param  无
+  * @retval 无
+  */
 void DCMI_IRQHandler(void)
 {
-	if(DCMI_GetITStatus(DCMI_IT_FRAME)==SET)//捕获到一帧图像
-	{
+    if(DCMI_GetITStatus(DCMI_IT_FRAME)==SET)//捕获到一帧图像
+    {
         LCD_SetCursor(0, 0);  // 设置光标位置                   
-        LCD_WriteRAM_Prepare();   // 开始写入GRAM     
-		DCMI_ClearITPendingBit(DCMI_IT_FRAME);//清除帧中断
-		ov_frame++; 
-      //  dcmi_stop();
-	}
+        lcd_write_ram_prepare();   // 开始写入GRAM     
+        DCMI_ClearITPendingBit(DCMI_IT_FRAME);//清除帧中断
+        ov_frame++; 
+    }
 } 
 
-
-////使用帧中断重置line_num,可防止有时掉数据的时候DMA传送行数出现偏移
-//void DCMI_IRQHandler(void)
-//{
-
-//	if(  DCMI_GetITStatus (DCMI_IT_FRAME) == SET )    
-//	{
-//		/*传输完一帧*/
-//		line_num=0;
-//		fps++; //帧率计数
-//		
-//		DCMI_ClearITPendingBit(DCMI_IT_FRAME); 
-//	}
-//}
-
+//TODO ERROR 进不了中断
+/**
+  * @brief  DMA2_Stream1中断服务函数
+  * @param  无
+  * @retval 无
+  */
 void DMA2_Stream1_IRQHandler(void)
 {
     if(DMA_GetITStatus(DMA2_Stream1,DMA_IT_TCIF1) == SET)    
     {
         LED1 = 0;
-//		line_num++;
-
-//    if(line_num==out_height)
-//		{
-//			/*传输完一帧*/
-//			line_num=0;
-//		}
-//		
-//		/*DMA 一行一行传输*/
-//    OV2640_DMA_Config(FSMC_LCD_ADDRESS+(out_width*2*(out_height-line_num-1)),out_width/2);
         DMA_ClearITPendingBit(DMA2_Stream1,DMA_IT_TCIF1);
-	}
+    }
 }
 
-
-//DCMI DMA配置
-//DMA_Memory0BaseAddr:存储器地址    将要存储摄像头数据的内存地址(也可以是外设地址)
-//DMA_BufferSize:存储器长度    0~65535
-//DMA_MemoryDataSize:存储器位宽    @DMA_MemoryDataSize_Byte/_HalfWord/_Word
-//DMA_MemoryInc:存储器增长方式  @DMA_MemoryInc_Enable/_Disable
-void dcmi_dma_init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize,u32 DMA_MemoryDataSize,u32 DMA_MemoryInc)
+/**
+  * @brief  DCMI的DMA初始化
+  * @param  DMA_Memory0BaseAddr 将要存储摄像头数据的内存地址(或外设地址)
+  * @param  DMA_BufferSize 存储器长度(0~65535)
+  * @retval 无
+  */
+void dcmi_dma_init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize)
 { 
     DMA_InitTypeDef  DMA_InitStructure;
 	
@@ -73,23 +65,24 @@ void dcmi_dma_init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize,u32 DMA_MemoryData
     DMA_InitStructure.DMA_Memory0BaseAddr = DMA_Memory0BaseAddr;  //内存地址
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;       //外设到内存
     DMA_InitStructure.DMA_BufferSize = DMA_BufferSize; //数据传输量 
-    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;//外设no inc
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc;//内存 inc
+    DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Disable;//外设no inc
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;//内存 inc
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;//外设数据长度:32位
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize;//存储器数据长度 
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;//存储器数据长度 
     DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;// 使用循环模式 
     DMA_InitStructure.DMA_Priority = DMA_Priority_High;//高优先级
     DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable; //FIFO模式        
     DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;//使用全FIFO 
-    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;//外设突发单次传输
+    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_INC8;//外设突发单次传输
     DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;//存储器突发单次传输
     DMA_Init(DMA2_Stream1, &DMA_InitStructure);//初始化DMA Stream	
-    //DMA_Cmd(DMA2_Stream1,ENABLE);
-   // while(DMA_GetCmdStatus(DMA2_Stream1) != ENABLE){}
-        
 }
 
-//DCMI初始化
+/**
+  * @brief  DCMI初始化
+  * @param  无
+  * @retval 无
+  */
 void dcmi_config(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure;
@@ -152,7 +145,11 @@ void dcmi_config(void)
     DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);//开启帧中断 
 } 
 
-//DCMI,启动传输
+/**
+  * @brief  DCMI启动传输
+  * @param  无
+  * @retval 无
+  */
 void dcmi_start(void)
 {  
     DCMI_Cmd(ENABLE);	//DCMI使能
@@ -160,7 +157,11 @@ void dcmi_start(void)
     DCMI_CaptureCmd(ENABLE);//DCMI捕获使能  
 }
 
-//DCMI,关闭传输
+/**
+  * @brief  DCMI停止传输
+  * @param  无
+  * @retval 无
+  */
 void dcmi_stop(void)
 { 
     DCMI_CaptureCmd(DISABLE);//DCMI捕获使关闭

@@ -22,23 +22,21 @@ u16 POINT_COLOR=0x0000;	//画笔颜色
 u16 BACK_COLOR=0xFFFF;  //背景色 
 _lcd_dev lcddev;        //LCD管理重要参数
 
-/*****************************************************************************
-*	函 数 名: lcd_show_image
-*	功    能: 9倍稀疏的240*240黑白图像显示
-*   调用函数：LCD_SetCursor(); LCD_WriteRAM_Prepare();   
-*	形    参：m[80][80] 图像数据
-*	返 回 值: 无
-******************************************************************************/	
-void lcd_show_image(u16 m[80][80])
+/**
+  * @brief  显示80*80的二值图像，为适应240*240的屏幕，我们将它放大了9倍
+  * @param  m[80][80] 待显示的图像
+  * @retval 无
+  */
+void lcd_show_image(uint16_t m[80][80])
 {  
-	u16 i, j, n;
+    u16 i, j, n;
     
     for(i = 0; i < 80; i++)
     {
         for(n = 0; n < 3; n++)
         {           
             LCD_SetCursor(0, i*3+n);  // 设置光标位置                   
-            LCD_WriteRAM_Prepare();   // 开始写入GRAM     
+            lcd_write_ram_prepare();   // 开始写入GRAM     
             for(j = 0; j < 80; j++)
             {
                 if(m[i][j] == 0)
@@ -58,20 +56,21 @@ void lcd_show_image(u16 m[80][80])
     }	  
 }  
 
-/*****************************************************************************
-*	函 数 名: lcd_show_image
-*	功    能: LCD显示数字，大小16，模式填充
-*   调用函数：LCD_Pow(); LCD_ShowChar();   
-*	形    参：x 起点行坐标; y 起点列坐标; num 要显示的数字
-*	返 回 值: 无
-******************************************************************************/	
+/**
+  * @brief  LCD显示数字，字体大小16，模式填充
+  * @param  x 起点行坐标
+  * @param  y 起点列坐标
+  * @param  num 待显示的数字
+  * @retval 无
+  */
 void lcd_show_num(u16 y, u16 x, u32 num)
 {  
     u8 len = 0, size = 16;  
-	u8 t, temp;   
-	u8 enshow = 0;	
+    u8 t, temp;   
+    u8 enshow = 0;	
     u32 n = num;
-    /* 求数字长度 */
+    
+    // 求数字长度
     while(n)
     {
         n/=10;
@@ -81,24 +80,25 @@ void lcd_show_num(u16 y, u16 x, u32 num)
     {
         LCD_ShowChar(x, y, '0', size, 0);
     }
-    /* 参考至本文件 LCD_ShowxNum */
-	for(t = 0; t < len; t++)
-	{
-		temp = (num/LCD_Pow(10,len-t-1))%10;
-		if( (enshow == 0)&&(t<(len-1)) )
-		{
-			if(temp == 0)
-			{
+    
+    // 参考至本文件 LCD_ShowxNum
+    for(t = 0; t < len; t++)
+    {
+        temp = (num/LCD_Pow(10,len-t-1))%10;
+        if( (enshow == 0)&&(t<(len-1)) )
+        {
+            if(temp == 0)
+            {
                 LCD_ShowChar(x+(size/2)*t, y, ' ', size, 0);  
- 				continue;
-			}
+                continue;
+            }
             else
             {
                 enshow = 1; 
             }	 	 
-		}
-	 	LCD_ShowChar(x+(size/2)*t, y, temp+'0', size, 0); 
-	}
+        }
+        LCD_ShowChar(x+(size/2)*t, y, temp+'0', size, 0); 
+    }
 } 
 
 
@@ -148,7 +148,7 @@ u16 LCD_ReadReg(vu16 LCD_Reg)
 }  
 
 //开始写GRAM
-void LCD_WriteRAM_Prepare(void)
+void lcd_write_ram_prepare(void)
 {
  	LCD->LCD_REG=lcddev.wramcmd;	  
 }	 
@@ -269,7 +269,7 @@ void LCD_SetCursor(u16 Xpos, u16 Ypos)
 //所以,一般设置为L2R_U2D即可,如果设置为其他扫描方式,可能导致显示不正常.
 //dir:0~7,代表8个方向(具体定义见lcd.h)
 //9320/9325/9328/4531/4535/1505/b505/8989/5408/9341/5310/5510等IC已经实际测试	   	   
-void LCD_Scan_Dir(u8 dir)
+void lcd_scan_dir(u8 dir)
 {
 	u16 regval=0;
 	u16 dirreg=0;
@@ -416,7 +416,7 @@ void LCD_Scan_Dir(u8 dir)
 void LCD_DrawPoint(u16 x,u16 y)
 {
 	LCD_SetCursor(x,y);		//设置光标位置 
-	LCD_WriteRAM_Prepare();	//开始写入GRAM
+	lcd_write_ram_prepare();	//开始写入GRAM
 	LCD->LCD_RAM=POINT_COLOR; 
 }
 
@@ -524,7 +524,7 @@ void LCD_Display_Dir(u8 dir)
 			lcddev.height=320; 			
 		}
 	} 
-	LCD_Scan_Dir(DFT_SCAN_DIR);	//默认扫描方向
+	lcd_scan_dir(DFT_SCAN_DIR);	//默认扫描方向
 }	 
 //设置窗口,并自动设置画点坐标到窗口左上角(sx,sy).
 //sx,sy:窗口起始坐标(左上角)
@@ -2603,7 +2603,7 @@ void lcd_init(void)
 	}		 
 	LCD_Display_Dir(0);		 	//默认为竖屏
 	LCD_LED=1;					//点亮背光
-	lcd_clear(WHITE);
+	lcd_clear(BLACK);
 }  
 
 //清屏函数
@@ -2623,7 +2623,7 @@ void lcd_clear(u16 color)
   		lcddev.setxcmd=0X2B;
 		lcddev.setycmd=0X2A;  	 
  	}else LCD_SetCursor(0x00,0x0000);	//设置光标位置 
-	LCD_WriteRAM_Prepare();     		//开始写入GRAM	 	  
+	lcd_write_ram_prepare();     		//开始写入GRAM	 	  
 	for(index=0;index<totalpoint;index++)
 	{
 		LCD->LCD_RAM=color;	
@@ -2658,7 +2658,7 @@ void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
 		for(i=sy;i<=ey;i++)
 		{
 		 	LCD_SetCursor(sx,i);      				//设置光标位置 
-			LCD_WriteRAM_Prepare();     			//开始写入GRAM	  
+			lcd_write_ram_prepare();     			//开始写入GRAM	  
 			for(j=0;j<xlen;j++)LCD->LCD_RAM=color;	//显示颜色 	    
 		}
 	}	 
@@ -2676,7 +2676,7 @@ void LCD_Color_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 *color)
  	for(i=0;i<height;i++)
 	{
  		LCD_SetCursor(sx,sy+i);   	//设置光标位置 
-		LCD_WriteRAM_Prepare();     //开始写入GRAM
+		lcd_write_ram_prepare();     //开始写入GRAM
 		for(j=0;j<width;j++)LCD->LCD_RAM=color[i*width+j];//写入数据 
 	}		  
 }  

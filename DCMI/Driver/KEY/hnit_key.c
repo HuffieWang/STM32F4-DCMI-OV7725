@@ -10,14 +10,12 @@
 
 #include "hnit_key.h"
 
-/*****************************************************************************
-*	函 数 名: KEY_Init
-*	功    能: 按键扫描GPIO配置
-*   调用函数：GPIO类库函数
-*	形    参：无
-*	返 回 值: 无
-******************************************************************************/	
-void key_init(void)
+/**
+  * @brief  按键GPIO初始化
+  * @param  无
+  * @retval 无
+  */
+void key_gpio_config(void)
 {    	 
     GPIO_InitTypeDef  GPIO_InitStructure;
 

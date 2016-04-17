@@ -6,6 +6,6 @@
 #define KEY0 PEin(4)	// KEY0
 #define KEY1 PEin(3)	// KEY1	 
 
-void key_init(void);
+void key_gpio_config(void);
 
 #endif

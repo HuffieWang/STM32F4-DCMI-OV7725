@@ -10,7 +10,7 @@ Project File Date:  04/16/2016
 Build target 'HNIT-STM32'
 compiling main.c...
 linking...
-Program Size: Code=28884 RO-data=6572 RW-data=212 ZI-data=1852  
+Program Size: Code=28876 RO-data=6572 RW-data=208 ZI-data=1848  
 FromELF: creating hex file...
 "..\OBJ\STM32-HNIT.axf" - 0 Error(s), 0 Warning(s).
 Load "..\\OBJ\\STM32-HNIT.axf" 
@@ -36,7 +36,7 @@ ROMTableAddr = 0xE00FF003
 Target info:
 ------------
 Device: STM32F407ZE
-VTarget = 3.228V
+VTarget = 3.235V
 State of Pins: 
 TCK: 1, TDI: 0, TDO: 1, TMS: 0, TRES: 1, TRST: 1
 Hardware-Breakpoints: 6
@@ -48,71 +48,17 @@ Erase Done.
 Programming Done.
 Verify OK.
 Application running ...
-</pre>
-</body>
-</html>
-
-reakpoints: 6
-Software-Breakpoints: 8192
-Watchpoints:          4
-JTAG speed: 2000 kHz
- 
-Erase Done.
-Programming Done.
-Verify OK.
-Application running ...
-.
-Application running ...
-or: Can not read register 4 (R4) while CPU is running
-***JLink Error: Can not read register 5 (R5) while CPU is running
-***JLink Error: Can not read register 6 (R6) while CPU is running
-***JLink Error: Can not read register 7 (R7) while CPU is running
-***JLink Error: Can not read register 8 (R8) while CPU is running
-***JLink Error: Can not read register 9 (R9) while CPU is running
-***JLink Error: Can not read register 10 (R10) while CPU is running
-***JLink Error: Can not read register 11 (R11) while CPU is running
-***JLink Error: Can not read register 12 (R12) while CPU is running
-***JLink Error: Can not read register 13 (R13) while CPU is running
-***JLink Error: Can not read register 14 (R14) while CPU is running
-***JLink Error: Can not read register 15 (R15) while CPU is running
-***JLink Error: Can not read register 16 (XPSR) while CPU is running
-***JLink Error: Can not read register 17 (MSP) while CPU is running
-***JLink Error: Can not read register 18 (PSP) while CPU is running
-***JLink Error: Can not read register 20 (CFBP) while CPU is running
-***JLink Error: Can not read register 32 (FPSCR) while CPU is running
-***JLink Error: Can not read register 33 (FPS0) while CPU is running
-***JLink Error: Can not read register 34 (FPS1) while CPU is running
-***JLink Error: Can not read register 35 (FPS2) while CPU is running
-***JLink Error: Can not read register 36 (FPS3) while CPU is running
-***JLink Error: Can not read register 37 (FPS4) while CPU is running
-***JLink Error: Can not read register 38 (FPS5) while CPU is running
-***JLink Error: Can not read register 39 (FPS6) while CPU is running
-***JLink Error: Can not read register 40 (FPS7) while CPU is running
-***JLink Error: Can not read register 41 (FPS8) while CPU is running
-***JLink Error: Can not read register 42 (FPS9) while CPU is running
-***JLink Error: Can not read register 43 (FPS10) while CPU is running
-***JLink Error: Can not read register 44 (FPS11) while CPU is running
-***JLink Error: Can not read register 45 (FPS12) while CPU is running
-***JLink Error: Can not read register 46 (FPS13) while CPU is running
-***JLink Error: Can not read register 47 (FPS14) while CPU is running
-***JLink Error: Can not read register 48 (FPS15) while CPU is running
-***JLink Error: Can not read register 49 (FPS16) while CPU is running
-***JLink Error: Can not read register 50 (FPS17) while CPU is running
-***JLink Error: Can not read register 51 (FPS18) while CPU is running
-***JLink Error: Can not read register 52 (FPS19) while CPU is running
-***JLink Error: Can not read register 53 (FPS20) while CPU is running
-***JLink Error: Can not read register 64 (FPS31) while CPU is running
-***JLink Error: Can not read register 40 (FPS7) while CPU is running
-***JLink Error: Can not read register 41 (FPS8) while CPU is running
-***JLink Error: Can not read register 42 (FPS9) while CPU is running
-***JLink Error: Can not read register 43 (FPS10) while CPU is running
-***JLink Error: Can not read register 44 (FPS11) while CPU is running
-***JLink Error: Can not read register 45 (FPS12) while CPU is running
-***JLink Error: Can not read register 46 (FPS13) while CPU is running
-***JLink Error: Can not read register 47 (FPS14) while CPU is running
-***JLink Error: Can not read register 48 (FPS15) while CPU is running
-***JLink Error: Can not read register 49 (FPS16) while CPU is running
-Erase Done.
-Programming Done.
-Verify OK.
-Application running ...
+citly
+          LCD_WriteRAM_Prepare();   // 开始写入GRAM     
+..\Driver\DCMI\hnit_dcmi.c: 1 warning, 0 errors
+compiling main.c...
+..\USER\main.c(52): warning:  #223-D: function "LCD_WriteRAM_Prepare" declared implicitly
+      LCD_WriteRAM_Prepare();   // 开始写入GRAM 
+..\USER\main.c: 1 warning, 0 errors
+linking...
+..\OBJ\STM32-HNIT.axf: Error: L6218E: Undefined symbol LCD_Scan_Dir (referred from hnit_lcd.o).
+..\OBJ\STM32-HNIT.axf: Error: L6218E: Undefined symbol LCD_WriteRAM_Prepare (referred from hnit_lcd.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 2 error messages.
+"..\OBJ\STM32-HNIT.axf" - 2 Error(s), 8 Warning(s).
+Target not created

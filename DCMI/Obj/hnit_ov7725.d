@@ -37,5 +37,4 @@
 ..\obj\hnit_ov7725.o: ..\FwLib\inc\stm32f4xx_dcmi.h
 ..\obj\hnit_ov7725.o: ..\FwLib\inc\stm32f4xx_fsmc.h
 ..\obj\hnit_ov7725.o: ..\Driver\SCCB\hnit_sccb.h
-..\obj\hnit_ov7725.o: ..\Driver\LCD\hnit_lcd.h
-..\obj\hnit_ov7725.o: D:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h
+..\obj\hnit_ov7725.o: ..\Driver\DCMI\hnit_dcmi.h

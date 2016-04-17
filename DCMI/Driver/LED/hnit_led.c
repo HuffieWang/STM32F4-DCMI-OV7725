@@ -10,14 +10,12 @@
 
 #include "hnit_led.h" 
 	 
-/*****************************************************************************
-*	函 数 名: LED_Init
-*	功    能: LED GPIO初始化
-*   调用函数：GPIO类库函数
-*	形    参：无
-*	返 回 值: 无
-******************************************************************************/	
-void led_init(void)
+/**
+  * @brief  LED GPIO初始化
+  * @param  无
+  * @retval 无
+  */
+void led_gpio_config(void)
 {    	 
     GPIO_InitTypeDef  GPIO_InitStructure;
 

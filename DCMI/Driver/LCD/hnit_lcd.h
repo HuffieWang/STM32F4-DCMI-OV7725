@@ -4,7 +4,7 @@
 #include "stdlib.h"
 
 
-void lcd_show_image(u16 m[80][80]);
+void lcd_show_image(uint16_t m[80][80]);
 void lcd_show_num(u16 y, u16 x, u32 num);
 
 /****************** 以下为正点原子lcd.h源码 www.opendv.com *******************/
@@ -103,9 +103,9 @@ void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);		//显示一个
 u32 LCD_Pow(u8 m,u8 n);
 void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
 u16 LCD_ReadReg(u16 LCD_Reg);
-void LCD_WriteRAM_Prepare(void);
+void lcd_write_ram_prepare(void);
 void LCD_WriteRAM(u16 RGB_Code);		  
-void LCD_Scan_Dir(u8 dir);							//设置屏扫描方向
+void lcd_scan_dir(u8 dir);							//设置屏扫描方向
 void LCD_Display_Dir(u8 dir);						//设置屏幕显示方向
 void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height);//设置窗口					   																			 
 //9320/9325 LCD寄存器  

@@ -7,24 +7,21 @@
  * 作    者 ：3103创新团队
  * 修改记录 ：无
 ******************************************************************************/
-
 #include "hnit_sccb.h"
 #include "hnit_lcd.h"
 
 #define DEV_ADR  ADDR_OV7725 			 /*设备地址定义*/
 
-/********************************************************************
- * 函数名：sccb_gpio_config
- * 描述  ：SCCB管脚配置
- * 输入  ：无
- * 输出  ：无
- * 注意  ：无        
- ********************************************************************/
+ /**
+  * @brief  SCCB管脚配置
+  * @param  无
+  * @retval 无
+  */
 void sccb_gpio_config(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure; 
-    /* SCL(PD6)、SDA(PD7)管脚配置 */
-       
+    
+    /* SCL(PD6)、SDA(PD7)管脚配置 */     
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);  //使能GPIOC时钟
     
     GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_6 | GPIO_Pin_7;
@@ -36,13 +33,11 @@ void sccb_gpio_config(void)
     GPIO_Init(GPIOD, &GPIO_InitStructure);                //初始化
 }
 
-/********************************************************************
- * 函数名：sccb_delay
- * 描述  ：延迟时间
- * 输入  ：无
- * 输出  ：无
- * 注意  ：内部调用        
- ********************************************************************/
+/**
+  * @brief  SCCB协议专用延时
+  * @param  无
+  * @retval 无
+  */
 static void sccb_delay(void)
 {	
    uint16_t i = 800; 
@@ -52,13 +47,11 @@ static void sccb_delay(void)
    } 
 }
 
-/********************************************************************
- * 函数名：sccb_start
- * 描述  ：SCCB起始信号
- * 输入  ：无
- * 输出  ：无
- * 注意  ：内部调用        
- ********************************************************************/
+/**
+  * @brief  SCCB起始信号
+  * @param  无
+  * @retval 无
+  */
 static int sccb_start(void)
 {
 	SDA_H;
@@ -76,13 +69,11 @@ static int sccb_start(void)
 	return ENABLE;
 }
 
-/********************************************************************
- * 函数名：sccb_stop
- * 描述  ：SCCB停止信号
- * 输入  ：无
- * 输出  ：无
- * 注意  ：内部调用        
- ********************************************************************/
+/**
+  * @brief  SCCB停止信号
+  * @param  无
+  * @retval 无
+  */
 static void sccb_stop(void)
 {
 	SCL_L;
@@ -95,13 +86,11 @@ static void sccb_stop(void)
 	sccb_delay();
 }
 
-/********************************************************************
- * 函数名：sccb_ack
- * 描述  ：SCCB应答方式
- * 输入  ：无
- * 输出  ：无
- * 注意  ：内部调用        
- ********************************************************************/
+/**
+  * @brief  SCCB应答
+  * @param  无
+  * @retval 无
+  */
 static void sccb_ack(void)
 {	
 	SCL_L;
@@ -114,13 +103,11 @@ static void sccb_ack(void)
 	sccb_delay();
 }
 
-/********************************************************************
- * 函数名：sccb_no_ack
- * 描述  ：SCCB 无应答方式
- * 输入  ：无
- * 输出  ：无
- * 注意  ：内部调用        
- ********************************************************************/
+/**
+  * @brief  SCCB 无应答
+  * @param  无
+  * @retval 无
+  */
 static void sccb_no_ack(void)
 {	
 	SCL_L;
@@ -133,13 +120,12 @@ static void sccb_no_ack(void)
 	sccb_delay();
 }
 
-/********************************************************************
- * 函数名：sccb_wait_ack
- * 描述  ：SCCB 等待应答
- * 输入  ：无
- * 输出  ：返回为:=1有ACK,=0无ACK
- * 注意  ：内部调用        
- ********************************************************************/
+/**
+  * @brief  SCCB 等待应答
+  * @param  无
+  * @retval 1：有ACK 
+  *         0：无ACK
+  */
 static int sccb_wait_ack(void) 	
 {
 	SCL_L;
@@ -157,13 +143,11 @@ static int sccb_wait_ack(void)
 	return ENABLE;
 }
 
- /*******************************************************************
- * 函数名：sccb_send_byte
- * 描述  ：数据从高位到低位
- * 输入  ：SendByte: 发送的数据
- * 输出  ：无
- * 注意  ：内部调用        
- *********************************************************************/
+/**
+  * @brief  数据从高位到低位
+  * @param  SendByte 发送的数据
+  * @retval 无
+  */
 static void sccb_send_byte(uint8_t SendByte) 
 {
     uint8_t i=8;
@@ -183,13 +167,11 @@ static void sccb_send_byte(uint8_t SendByte)
     SCL_L;
 }
 
- /******************************************************************
- * 函数名：sccb_receive_byte
- * 描述  ：数据从高位到低位
- * 输入  ：无
- * 输出  ：SCCB总线返回的数据
- * 注意  ：内部调用        
- *******************************************************************/
+/**
+  * @brief  数据从高位到低位
+  * @param  无
+  * @retval SCCB总线返回的数据
+  */
 static int sccb_receive_byte(void)  
 { 
     uint8_t i=8;
@@ -212,13 +194,12 @@ static int sccb_receive_byte(void)
     return ReceiveByte;
 }
 
- /*****************************************************************************************
- * 函数名：sccb_write_byte
- * 描述  ：写一字节数据
- * 输入  ：- WriteAddress: 待写入地址 	- SendByte: 待写入数据	- DeviceAddress: 器件类型
- * 输出  ：返回为:=1成功写入,=0失败
- * 注意  ：无        
- *****************************************************************************************/           
+/**
+  * @brief  写一字节数据
+  * @param  WriteAddress 待写入地址
+  * @param  SendByte     待写入数据
+  * @retval 无
+  */
 int sccb_write_byte( uint16_t WriteAddress , uint8_t SendByte )
 {  
     if(!sccb_start())
@@ -240,13 +221,13 @@ int sccb_write_byte( uint16_t WriteAddress , uint8_t SendByte )
     return ENABLE;
 }
 
-/******************************************************************************************************************
- * 函数名：sccb_read_byte
- * 描述  ：读取一串数据
- * 输入  ：- pBuffer: 存放读出数据 	- length: 待读出长度	- ReadAddress: 待读出地址		 - DeviceAddress: 器件类型
- * 输出  ：返回为:=1成功读入,=0失败
- * 注意  ：无        
- **********************************************************************************************************************/           
+/**
+  * @brief  读取一串数据
+  * @param  pBuffer     存放读出数据
+  * @param  ReadAddress 待读出地址
+  * @retval 1：成功读入
+  *         2：失败
+  */
 int sccb_read_byte(uint8_t* pBuffer, uint16_t length, uint8_t ReadAddress)
 {	
     if(!sccb_start())

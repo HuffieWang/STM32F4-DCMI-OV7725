@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\STM32-HNIT.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\STM32-HNIT.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Sun Apr 17 15:25:44 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Sun Apr 17 19:36:02 2016
 <BR><P>
 <H3>Maximum Stack Usage =        264 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -692,8 +692,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_config
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_gpio_config
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
-<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_init
-<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_init
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_gpio_config
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_gpio_config
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart1_init
 </UL>
 
@@ -721,7 +721,7 @@ Global Symbols
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_ack
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_stop
 <LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_start
-<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_init
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_gpio_config
 </UL>
 
 <P><STRONG><a name="[ba]"></a>GPIO_ResetBits</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_gpio.o(.text))
@@ -827,8 +827,8 @@ Global Symbols
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_dma_init
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_gpio_config
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
-<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_init
-<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_init
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_gpio_config
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_gpio_config
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart1_init
 </UL>
 
@@ -1056,8 +1056,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
-<P><STRONG><a name="[8f]"></a>led_init</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, hnit_led.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = led_init &rArr; GPIO_Init
+<P><STRONG><a name="[8f]"></a>led_gpio_config</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, hnit_led.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = led_gpio_config &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_AHB1PeriphClockCmd
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
@@ -1066,8 +1066,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[91]"></a>key_init</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, hnit_key.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = key_init &rArr; GPIO_Init
+<P><STRONG><a name="[91]"></a>key_gpio_config</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, hnit_key.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = key_gpio_config &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_AHB1PeriphClockCmd
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
@@ -1075,9 +1075,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[97]"></a>LCD_WriteRAM_Prepare</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, hnit_lcd.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_IRQHandler
+<P><STRONG><a name="[97]"></a>lcd_write_ram_prepare</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, hnit_lcd.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_IRQHandler
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Color_Fill
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fill
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear
@@ -1090,7 +1089,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Set_Window
-<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Scan_Dir
+<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_scan_dir
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayOff
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayOn
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fast_DrawPoint
@@ -1102,7 +1101,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Set_Window
-<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Scan_Dir
+<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_scan_dir
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fast_DrawPoint
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
 </UL>
@@ -1112,7 +1111,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Set_Window
-<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Scan_Dir
+<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_scan_dir
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayOff
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayOn
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_ReadPoint
@@ -1140,7 +1139,7 @@ Global Symbols
 
 <P><STRONG><a name="[96]"></a>lcd_show_image</STRONG> (Thumb, 122 bytes, Stack size 20 bytes, hnit_lcd.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
 
 <P><STRONG><a name="[98]"></a>LCD_Fast_DrawPoint</STRONG> (Thumb, 280 bytes, Stack size 16 bytes, hnit_lcd.o(.text), UNUSED)
@@ -1217,8 +1216,8 @@ Global Symbols
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
 </UL>
 
-<P><STRONG><a name="[a4]"></a>LCD_Scan_Dir</STRONG> (Thumb, 736 bytes, Stack size 28 bytes, hnit_lcd.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = LCD_Scan_Dir &rArr; LCD_WriteReg
+<P><STRONG><a name="[a4]"></a>lcd_scan_dir</STRONG> (Thumb, 736 bytes, Stack size 28 bytes, hnit_lcd.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = lcd_scan_dir &rArr; LCD_WriteReg
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WR_REG
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WR_DATA
@@ -1230,16 +1229,16 @@ Global Symbols
 
 <P><STRONG><a name="[a5]"></a>LCD_DrawPoint</STRONG> (Thumb, 28 bytes, Stack size 12 bytes, hnit_lcd.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Draw_Circle
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawLine
 </UL>
 
 <P><STRONG><a name="[a6]"></a>LCD_Display_Dir</STRONG> (Thumb, 364 bytes, Stack size 8 bytes, hnit_lcd.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LCD_Display_Dir &rArr; LCD_Scan_Dir &rArr; LCD_WriteReg
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LCD_Display_Dir &rArr; lcd_scan_dir &rArr; LCD_WriteReg
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Scan_Dir
+<BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_scan_dir
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
 </UL>
@@ -1255,13 +1254,12 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = lcd_clear &rArr; LCD_SetCursor &rArr; LCD_WriteReg
 </UL>
 <BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
-<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
+<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
 </UL>
 
-<P><STRONG><a name="[a9]"></a>lcd_init</STRONG> (Thumb, 14216 bytes, Stack size 136 bytes, hnit_lcd.o(.text))
+<P><STRONG><a name="[a9]"></a>lcd_init</STRONG> (Thumb, 14214 bytes, Stack size 136 bytes, hnit_lcd.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264 + Unknown Stack Size
 <LI>Call Chain = lcd_init &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -1288,14 +1286,14 @@ Global Symbols
 <P><STRONG><a name="[ae]"></a>LCD_Fill</STRONG> (Thumb, 180 bytes, Stack size 44 bytes, hnit_lcd.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fill
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fill
 </UL>
 
 <P><STRONG><a name="[af]"></a>LCD_Color_Fill</STRONG> (Thumb, 92 bytes, Stack size 40 bytes, hnit_lcd.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
 
 <P><STRONG><a name="[b0]"></a>LCD_DrawLine</STRONG> (Thumb, 176 bytes, Stack size 68 bytes, hnit_lcd.o(.text), UNUSED)
@@ -1308,7 +1306,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawLine
 </UL>
 
-<P><STRONG><a name="[b2]"></a>LCD_Draw_Circle</STRONG> (Thumb, 168 bytes, Stack size 28 bytes, hnit_lcd.o(.text), UNUSED)
+<P><STRONG><a name="[b2]"></a>LCD_Draw_Circle</STRONG> (Thumb, 166 bytes, Stack size 28 bytes, hnit_lcd.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DrawPoint
 </UL>
 
@@ -1332,7 +1330,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_AHB1PeriphClockCmd
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ov7725_init
 </UL>
 
 <P><STRONG><a name="[c1]"></a>sccb_write_byte</STRONG> (Thumb, 64 bytes, Stack size 16 bytes, hnit_sccb.o(.text))
@@ -1360,11 +1358,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ov7725_init
 </UL>
 
-<P><STRONG><a name="[c3]"></a>ov7725_init</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, hnit_ov7725.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = ov7725_init &rArr; sccb_read_byte &rArr; sccb_receive_byte
+<P><STRONG><a name="[c3]"></a>ov7725_init</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, hnit_ov7725.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = ov7725_init &rArr; sccb_gpio_config &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_read_byte
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_write_byte
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_gpio_config
 </UL>
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1375,7 +1374,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_ClearITPendingBit
 <LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_GetITStatus
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_SetCursor
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
@@ -1387,8 +1386,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
-<P><STRONG><a name="[c8]"></a>dcmi_dma_init</STRONG> (Thumb, 102 bytes, Stack size 80 bytes, hnit_dcmi.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = dcmi_dma_init &rArr; DMA_Init
+<P><STRONG><a name="[c8]"></a>dcmi_dma_init</STRONG> (Thumb, 104 bytes, Stack size 72 bytes, hnit_dcmi.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = dcmi_dma_init &rArr; DMA_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_GetCmdStatus
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_Init
@@ -1429,7 +1428,7 @@ Global Symbols
 <LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_CaptureCmd
 </UL>
 
-<P><STRONG><a name="[70]"></a>main</STRONG> (Thumb, 112 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[70]"></a>main</STRONG> (Thumb, 98 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264 + Unknown Stack Size
 <LI>Call Chain = main &rArr; lcd_init &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -1438,13 +1437,10 @@ Global Symbols
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_config
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_dma_init
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ov7725_init
-<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sccb_gpio_config
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_init
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear
-<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Scan_Dir
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteRAM_Prepare
-<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_init
-<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_init
+<LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_scan_dir
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_gpio_config
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_gpio_config
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart1_init
 <LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_init
