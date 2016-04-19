@@ -1,4 +1,5 @@
 ..\obj\hnit_dcmi.o: ..\Driver\DCMI\hnit_dcmi.c
+..\obj\hnit_dcmi.o: ..\Driver\DCMI\hnit_dcmi.h
 ..\obj\hnit_dcmi.o: ..\System\sys\stm32_sys.h
 ..\obj\hnit_dcmi.o: ..\System\stm32f4xx.h
 ..\obj\hnit_dcmi.o: ..\Core\core_cm4.h
@@ -35,7 +36,6 @@
 ..\obj\hnit_dcmi.o: ..\FwLib\inc\stm32f4xx_dac.h
 ..\obj\hnit_dcmi.o: ..\FwLib\inc\stm32f4xx_dcmi.h
 ..\obj\hnit_dcmi.o: ..\FwLib\inc\stm32f4xx_fsmc.h
-..\obj\hnit_dcmi.o: ..\Driver\DCMI\hnit_dcmi.h
 ..\obj\hnit_dcmi.o: ..\Driver\LED\hnit_led.h
 ..\obj\hnit_dcmi.o: ..\Driver\LCD\hnit_lcd.h
 ..\obj\hnit_dcmi.o: D:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h

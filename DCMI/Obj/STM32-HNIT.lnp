@@ -46,6 +46,7 @@
 "..\obj\hnit_sccb.o"
 "..\obj\hnit_ov7725.o"
 "..\obj\hnit_dcmi.o"
+"..\obj\hnit_sram.o"
 "..\obj\main.o"
 --strict --scatter "..\OBJ\STM32-HNIT.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols

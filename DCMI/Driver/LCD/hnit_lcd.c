@@ -6,10 +6,10 @@
  * 时    间 ：2016.3.20
  * 原 作 者 ：正点原子 www.opendv.com
  * 修改记录 ：1. 2016.3.20  3103创新团队
-                - 新增黑白图像显示函数LCD_DisImg();
-                - 新增简便数字显示函数LCD_DisNum();
-              2. 2016.4.9   3103创新团队
-                - 修改了LCD_DisNum()不能显示数字0的BUG;
+ *               - 新增黑白图像显示函数LCD_DisImg();
+ *               - 新增简便数字显示函数LCD_DisNum();
+ *            2. 2016.4.9   3103创新团队
+ *               - 修改了LCD_DisNum()不能显示数字0的BUG;
 ******************************************************************************/
 
 #include "hnit_lcd.h"
@@ -31,6 +31,7 @@ void lcd_show_image(uint16_t m[80][80])
 {  
     u16 i, j, n;
     
+    lcd_scan_dir(3);
     for(i = 0; i < 80; i++)
     {
         for(n = 0; n < 3; n++)
@@ -53,7 +54,8 @@ void lcd_show_image(uint16_t m[80][80])
                 }               
             }
         }
-    }	  
+    }
+    lcd_scan_dir(5);    
 }  
 
 /**
@@ -70,6 +72,7 @@ void lcd_show_num(u16 y, u16 x, u32 num)
     u8 enshow = 0;	
     u32 n = num;
     
+    lcd_scan_dir(3);
     // 求数字长度
     while(n)
     {
@@ -99,6 +102,7 @@ void lcd_show_num(u16 y, u16 x, u32 num)
         }
         LCD_ShowChar(x+(size/2)*t, y, temp+'0', size, 0); 
     }
+    lcd_scan_dir(5);
 } 
 
 
@@ -2600,8 +2604,11 @@ void lcd_init(void)
 		LCD_WriteReg(0X07,0X0023);   
 		LCD_WriteReg(0X07,0X0033);   
 		LCD_WriteReg(0X07,0X0133);   
-	}		 
+	}	
+
+    //TODO
 	LCD_Display_Dir(0);		 	//默认为竖屏
+    lcd_scan_dir(5);
 	LCD_LED=1;					//点亮背光
 	lcd_clear(BLACK);
 }  

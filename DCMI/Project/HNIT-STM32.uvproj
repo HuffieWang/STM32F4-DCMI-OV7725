@@ -366,7 +366,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\FwLib\inc;..\System;..\System\delay;..\System\sys;..\System\usart;..\User;..\Driver\LED;..\Driver\KEY;..\Driver\LCD;..\Driver\SCCB;..\Driver\OV7725;..\Driver\DCMI</IncludePath>
+              <IncludePath>..\Core;..\FwLib\inc;..\System;..\System\delay;..\System\sys;..\System\usart;..\User;..\Driver\LED;..\Driver\KEY;..\Driver\LCD;..\Driver\SCCB;..\Driver\OV7725;..\Driver\DCMI;..\Driver\SRAM</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -658,6 +658,11 @@
               <FileName>hnit_dcmi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Driver\DCMI\hnit_dcmi.c</FilePath>
+            </File>
+            <File>
+              <FileName>hnit_sram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\SRAM\hnit_sram.c</FilePath>
             </File>
           </Files>
         </Group>

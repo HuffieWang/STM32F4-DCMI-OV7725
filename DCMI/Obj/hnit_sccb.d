@@ -36,5 +36,3 @@
 ..\obj\hnit_sccb.o: ..\FwLib\inc\stm32f4xx_dac.h
 ..\obj\hnit_sccb.o: ..\FwLib\inc\stm32f4xx_dcmi.h
 ..\obj\hnit_sccb.o: ..\FwLib\inc\stm32f4xx_fsmc.h
-..\obj\hnit_sccb.o: ..\Driver\LCD\hnit_lcd.h
-..\obj\hnit_sccb.o: D:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h

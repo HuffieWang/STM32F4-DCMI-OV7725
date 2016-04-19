@@ -44,3 +44,4 @@
 ..\obj\main.o: D:\Keil_v5\ARM\ARMCC\bin\..\include\stdlib.h
 ..\obj\main.o: ..\Driver\OV7725\hnit_ov7725.h
 ..\obj\main.o: ..\Driver\DCMI\hnit_dcmi.h
+..\obj\main.o: ..\Driver\SRAM\hnit_sram.h

@@ -7,76 +7,10 @@
  * 作    者 ：3103创新团队
  * 修改记录 ：无
 ******************************************************************************/
-#include "stm32_sys.h"
 #include "hnit_dcmi.h" 
+#include "stm32_sys.h"
 #include "hnit_led.h" 
 #include "hnit_lcd.h"
-
-u8 ov_frame=0;  						//帧率
-
-/**
-  * @brief  一帧图像接收完毕，LCD光标回到初始位置
-  * @param  无
-  * @retval 无
-  */
-void DCMI_IRQHandler(void)
-{
-    if(DCMI_GetITStatus(DCMI_IT_FRAME)==SET)//捕获到一帧图像
-    {
-        LCD_SetCursor(0, 0);  // 设置光标位置                   
-        lcd_write_ram_prepare();   // 开始写入GRAM     
-        DCMI_ClearITPendingBit(DCMI_IT_FRAME);//清除帧中断
-        ov_frame++; 
-    }
-} 
-
-//TODO ERROR 进不了中断
-/**
-  * @brief  DMA2_Stream1中断服务函数
-  * @param  无
-  * @retval 无
-  */
-void DMA2_Stream1_IRQHandler(void)
-{
-    if(DMA_GetITStatus(DMA2_Stream1,DMA_IT_TCIF1) == SET)    
-    {
-        LED1 = 0;
-        DMA_ClearITPendingBit(DMA2_Stream1,DMA_IT_TCIF1);
-    }
-}
-
-/**
-  * @brief  DCMI的DMA初始化
-  * @param  DMA_Memory0BaseAddr 将要存储摄像头数据的内存地址(或外设地址)
-  * @param  DMA_BufferSize 存储器长度(0~65535)
-  * @retval 无
-  */
-void dcmi_dma_init(u32 DMA_Memory0BaseAddr,u16 DMA_BufferSize)
-{ 
-    DMA_InitTypeDef  DMA_InitStructure;
-	
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2,ENABLE);//DMA2时钟使能 
-    DMA_DeInit(DMA2_Stream1);
-    while (DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){}//等待DMA2_Stream1可配置 
-	
-    /* 配置 DMA Stream */
-    DMA_InitStructure.DMA_Channel = DMA_Channel_1; 
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)&DCMI->DR;    //外设地址
-    DMA_InitStructure.DMA_Memory0BaseAddr = DMA_Memory0BaseAddr;  //内存地址
-    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;       //外设到内存
-    DMA_InitStructure.DMA_BufferSize = DMA_BufferSize; //数据传输量 
-    DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Disable;//外设no inc
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;//内存 inc
-    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;//外设数据长度:32位
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;//存储器数据长度 
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;// 使用循环模式 
-    DMA_InitStructure.DMA_Priority = DMA_Priority_High;//高优先级
-    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable; //FIFO模式        
-    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;//使用全FIFO 
-    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_INC8;//外设突发单次传输
-    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;//存储器突发单次传输
-    DMA_Init(DMA2_Stream1, &DMA_InitStructure);//初始化DMA Stream	
-}
 
 /**
   * @brief  DCMI初始化
@@ -129,21 +63,56 @@ void dcmi_config(void)
     DCMI_InitStructure.DCMI_SynchroMode= DCMI_SynchroMode_Hardware;//硬件同步HSYNC,VSYNC
     DCMI_InitStructure.DCMI_VSPolarity=DCMI_VSPolarity_High;//VSYNC 低电平有效
     DCMI_Init(&DCMI_InitStructure);
+	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;//抢占优先级1
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		//子优先级3
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化NVIC寄存器
+    DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);//开启帧中断     
+} 
+
+/**
+  * @brief  DCMI的DMA初始化
+  * @param  DMA_Memory0BaseAddr 将要存储摄像头数据的内存地址(或外设地址)
+  * @param  DMA_BufferSize 存储器长度(0~65535)
+  * @param  DMA_Memory0Inc 存储器地址是否自增
+  * @retval 无
+  */
+void dcmi_dma_init(u32 DMA_Memory0BaseAddr, u16 DMA_BufferSize, u16 DMA_Memory0Inc)
+{ 
+    DMA_InitTypeDef  DMA_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+      
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2,ENABLE); //DMA2时钟使能 
+    DMA_DeInit(DMA2_Stream1);
+    while (DMA_GetCmdStatus(DMA2_Stream1) != DISABLE){} //等待DMA2_Stream1可配置 
 	
+    //配置 DMA Stream
+    DMA_InitStructure.DMA_Channel = DMA_Channel_1; 
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)&DCMI->DR;    
+    DMA_InitStructure.DMA_Memory0BaseAddr = DMA_Memory0BaseAddr;  //内存地址 
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;       
+    DMA_InitStructure.DMA_BufferSize = DMA_BufferSize;            //数据传输量 
+    DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_Memory0Inc;      //内存自增
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;            // 使用循环模式 
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable; 
+    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
+    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;           //储存器突发单次传输
+    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;   //外设突发单次传输
+    DMA_Init(DMA2_Stream1, &DMA_InitStructure);
+                    
     NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn ;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
     DMA_ITConfig(DMA2_Stream1,DMA_IT_TC,ENABLE); 
-
-    NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;//抢占优先级1
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
-    DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);//开启帧中断 
-} 
+    DCMI_Cmd(ENABLE);	             //DCMI使能       
+}
 
 /**
   * @brief  DCMI启动传输
@@ -152,9 +121,8 @@ void dcmi_config(void)
   */
 void dcmi_start(void)
 {  
-    DCMI_Cmd(ENABLE);	//DCMI使能
-    DMA_Cmd(DMA2_Stream1, ENABLE);//开启DMA2,Stream1 
-    DCMI_CaptureCmd(ENABLE);//DCMI捕获使能  
+    DMA_Cmd(DMA2_Stream1, ENABLE);   //开启DMA2,Stream1 
+    DCMI_CaptureCmd(ENABLE);         //DCMI捕获使能  
 }
 
 /**
@@ -164,9 +132,9 @@ void dcmi_start(void)
   */
 void dcmi_stop(void)
 { 
-    DCMI_CaptureCmd(DISABLE);//DCMI捕获使关闭
-    while(DCMI->CR&0X01);		//等待传输结束  	
-    DMA_Cmd(DMA2_Stream1,DISABLE);//关闭DMA2,Stream1
+    DCMI_CaptureCmd(DISABLE);       //DCMI捕获使关闭
+    while(DCMI->CR&0X01);		    //等待传输结束  	
+    DMA_Cmd(DMA2_Stream1,DISABLE);  //关闭DMA2,Stream1
 } 
 
 
