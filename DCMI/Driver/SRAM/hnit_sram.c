@@ -1,6 +1,6 @@
 /*********************** HNIT 3103 Application Team **************************
  * 文 件 名 ：hnit_lcd.h
- * 描    述 ：SRAM初始化  
+ * 描    述 ：SRAM  IS62WV51216BLL(1Mb)初始化  
  * 实验平台 ：STM32F407开发板
  * 库 版 本 ：ST1.4.0
  * 时    间 ：2016.3.24
@@ -8,7 +8,7 @@
  * 修改记录 ：无
 ******************************************************************************/
 #include "hnit_sram.h"	  
-#include "stm32_usart.h"	     
+#include "stm32_delay.h"     
 
 #define Bank1_SRAM3_ADDR    ((u32)(0x68000000))	
 						  
@@ -17,7 +17,7 @@
   * @param  无
   * @retval 无
   * @attention demo u32 testSram[250000] __attribute__((at(0X68000000)));
-  *            初始化后要延时一段时间，才能进行操作
+  *            初始化后要延时一段时间，才能进行操作。已在函数尾加了100ms延时
   */
 void fsmc_sram_init(void)
 {	
@@ -29,12 +29,12 @@ void fsmc_sram_init(void)
                            RCC_AHB1Periph_GPIOF|RCC_AHB1Periph_GPIOG, ENABLE);//使能PD,PE,PF,PG时钟  
     RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC,ENABLE);//使能FSMC时钟  
    
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;//PB15 推挽输出,控制背光
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;//100MHz
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
-    GPIO_Init(GPIOB, &GPIO_InitStructure);//初始化 //PB15 推挽输出,控制背光
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin = (3<<0)|(3<<4)|(0XFF<<8);//PD0,1,4,5,8~15 AF OUT
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;//复用输出
@@ -136,7 +136,9 @@ void fsmc_sram_init(void)
 
     FSMC_NORSRAMInit(&FSMC_NORSRAMInitStructure);  //初始化FSMC配置
 
-    FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM3, ENABLE);  // 使能BANK3										  											
+    FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM3, ENABLE);  // 使能BANK3			
+
+    delay_ms(100);
 }
 	  														  
 /**
@@ -145,7 +147,6 @@ void fsmc_sram_init(void)
   * @param  WriteAddr 要写入的地址
   * @param  n         要写入的字节数
   * @retval 无
-  * @attention demo u32 testSram[250000] __attribute__((at(0X68000000)));
   */
 void sram_write_buffer(u8* pBuffer,u32 WriteAddr,u32 n)
 {
@@ -163,7 +164,6 @@ void sram_write_buffer(u8* pBuffer,u32 WriteAddr,u32 n)
   * @param  WriteAddr 要读出的地址
   * @param  n         要读出的字节数
   * @retval 无
-  * @attention demo u32 testSram[250000] __attribute__((at(0X68000000)));
   */
 void sram_read_buffer(u8* pBuffer,u32 ReadAddr,u32 n)
 {

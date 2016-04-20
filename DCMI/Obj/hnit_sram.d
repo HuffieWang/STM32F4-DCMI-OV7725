@@ -36,5 +36,4 @@
 ..\obj\hnit_sram.o: ..\FwLib\inc\stm32f4xx_dac.h
 ..\obj\hnit_sram.o: ..\FwLib\inc\stm32f4xx_dcmi.h
 ..\obj\hnit_sram.o: ..\FwLib\inc\stm32f4xx_fsmc.h
-..\obj\hnit_sram.o: ..\System\usart\stm32_usart.h
-..\obj\hnit_sram.o: D:\Keil_v5\ARM\ARMCC\bin\..\include\stdio.h
+..\obj\hnit_sram.o: ..\System\delay\stm32_delay.h

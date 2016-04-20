@@ -4,7 +4,7 @@
  * 实验平台 ：STM32F407开发板
  * 库 版 本 ：ST1.4.0
  * 时    间 ：2016.04.08
- * 作    者 ：3103创新团队
+ * 作    者 ：3103创新团队 王昱霏
  * 修改记录 ：无
 ******************************************************************************/
 #include "hnit_sccb.h"
@@ -39,11 +39,11 @@ void sccb_gpio_config(void)
   */
 static void sccb_delay(void)
 {	
-   uint16_t i = 800; 
-   while(i) 
-   { 
-     i--; 
-   } 
+    uint16_t i = 800; 
+    while(i) 
+    { 
+        i--; 
+    } 
 }
 
 /**
@@ -53,19 +53,19 @@ static void sccb_delay(void)
   */
 static int sccb_start(void)
 {
-	SDA_H;
-	SCL_H;
-	sccb_delay();
-	if(!SDA_read)
-	return DISABLE;	/* SDA线为低电平则总线忙,退出 */
-	SDA_L;
-	sccb_delay();
-	if(SDA_read) 
-	return DISABLE;	/* SDA线为高电平则总线出错,退出 */
-	SDA_L;
-	sccb_delay();
+    SDA_H;
+    SCL_H;
+    sccb_delay();
+    if(!SDA_read)
+        return DISABLE;	/* SDA线为低电平则总线忙,退出 */
+    SDA_L;
+    sccb_delay();
+    if(SDA_read) 
+        return DISABLE;	/* SDA线为高电平则总线出错,退出 */
+    SDA_L;
+    sccb_delay();
     
-	return ENABLE;
+    return ENABLE;
 }
 
 /**
@@ -75,14 +75,14 @@ static int sccb_start(void)
   */
 static void sccb_stop(void)
 {
-	SCL_L;
-	sccb_delay();
-	SDA_L;
-	sccb_delay();
-	SCL_H;
-	sccb_delay();
-	SDA_H;
-	sccb_delay();
+    SCL_L;
+    sccb_delay();
+    SDA_L;
+    sccb_delay();
+    SCL_H;
+    sccb_delay();
+    SDA_H;
+    sccb_delay();
 }
 
 /**
@@ -92,14 +92,14 @@ static void sccb_stop(void)
   */
 static void sccb_ack(void)
 {	
-	SCL_L;
-	sccb_delay();
-	SDA_L;
-	sccb_delay();
-	SCL_H;
-	sccb_delay();
-	SCL_L;
-	sccb_delay();
+    SCL_L;
+    sccb_delay();
+    SDA_L;
+    sccb_delay();
+    SCL_H;
+    sccb_delay();
+    SCL_L;
+    sccb_delay();
 }
 
 /**
@@ -109,14 +109,14 @@ static void sccb_ack(void)
   */
 static void sccb_no_ack(void)
 {	
-	SCL_L;
-	sccb_delay();
-	SDA_H;
-	sccb_delay();
-	SCL_H;
-	sccb_delay();
-	SCL_L;
-	sccb_delay();
+    SCL_L;
+    sccb_delay();
+    SDA_H;
+    sccb_delay();
+    SCL_H;
+    sccb_delay();
+    SCL_L;
+    sccb_delay();
 }
 
 /**
@@ -127,19 +127,19 @@ static void sccb_no_ack(void)
   */
 static int sccb_wait_ack(void) 	
 {
-	SCL_L;
-	sccb_delay();
-	SDA_H;			
-	sccb_delay();
-	SCL_H;
-	sccb_delay();
-	if(SDA_read)
-	{
-      SCL_L;
-      return DISABLE;
-	}
-	SCL_L;
-	return ENABLE;
+    SCL_L;
+    sccb_delay();
+    SDA_H;			
+    sccb_delay();
+    SCL_H;
+    sccb_delay();
+    if(SDA_read)
+    {
+        SCL_L;
+        return DISABLE;
+    }
+    SCL_L;
+    return ENABLE;
 }
 
 /**
@@ -202,15 +202,15 @@ static int sccb_receive_byte(void)
 int sccb_write_byte( uint16_t WriteAddress , uint8_t SendByte )
 {  
     if(!sccb_start())
-	{
-	    return DISABLE;
-	}
+    {
+        return DISABLE;
+    }
     sccb_send_byte( DEV_ADR );                    /* 器件地址 */            
     if( !sccb_wait_ack() )
-	{          
-		sccb_stop(); 
-		return DISABLE;
-	}
+    {          
+        sccb_stop(); 
+        return DISABLE;
+    }
     
     sccb_send_byte((uint8_t)(WriteAddress & 0x00FF));   /* 设置低起始地址 */      
     sccb_wait_ack();	
@@ -230,42 +230,42 @@ int sccb_write_byte( uint16_t WriteAddress , uint8_t SendByte )
 int sccb_read_byte(uint8_t* pBuffer, uint16_t length, uint8_t ReadAddress)
 {	
     if(!sccb_start())
-	{
-	    return DISABLE;
-	}
+    {
+        return DISABLE;
+    }
     sccb_send_byte( DEV_ADR );         /* 器件地址 */
     if( !sccb_wait_ack() )
-	{
-		sccb_stop(); 
-		return DISABLE;
-	}
+    {
+        sccb_stop(); 
+        return DISABLE;
+    }
     sccb_send_byte( ReadAddress );     /* 设置低起始地址 */      
     sccb_wait_ack();	
     sccb_stop(); 
 	
     if(!sccb_start())
-	{
-		return DISABLE;
-	}
+    {
+        return DISABLE;
+    }
     sccb_send_byte( DEV_ADR + 1 );     /* 器件地址 */ 
     if(!sccb_wait_ack())
-	{
-		sccb_stop(); 
-		return DISABLE;
-	}
+    {
+        sccb_stop(); 
+        return DISABLE;
+    }
     while(length)
     {
-      *pBuffer = sccb_receive_byte();
-      if(length == 1)
-	  {
-		  sccb_no_ack();
-	  }
-      else
-	  {
-		sccb_ack(); 
-	  }
-      pBuffer++;
-      length--;
+        *pBuffer = sccb_receive_byte();
+        if(length == 1)
+        {
+            sccb_no_ack();
+        }
+        else
+        {
+            sccb_ack(); 
+        }
+        pBuffer++;
+        length--;
     }
     sccb_stop();
     return ENABLE;

@@ -83,11 +83,11 @@ typedef struct
 #define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
 #define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)
 	    															  
-void lcd_init(void);													   	//初始化
+void fsmc_lcd_init(void);													   	//初始化
 void LCD_DisplayOn(void);													//开显示
 void LCD_DisplayOff(void);													//关显示
 void lcd_clear(u16 color);	 												//清屏
-void LCD_SetCursor(u16 Xpos, u16 Ypos);										//设置光标
+void lcd_set_cursor(u16 Xpos, u16 Ypos);										//设置光标
 void LCD_DrawPoint(u16 x,u16 y);											//画点
 void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color);								//快速画点
 u16  LCD_ReadPoint(u16 x,u16 y); 											//读点 

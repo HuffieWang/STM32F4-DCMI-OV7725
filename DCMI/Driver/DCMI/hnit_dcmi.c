@@ -1,10 +1,11 @@
 /*********************** HNIT 3103 Application Team **************************
  * 文 件 名 ：hnit_dcmi.c
- * 描    述 ：DCMI配置    
+ * 描    述 ：DCMI初始化与操作   
  * 实验平台 ：STM32F407开发板
  * 库 版 本 ：ST1.4.0
- * 时    间 ：2016.04.08
- * 作    者 ：3103创新团队
+ * 时    间 ：2016.4.18
+ * 作    者 ：3103创新团队 王昱霏
+ * 注意事项 ：先dcmi_config(),然后再dcmi_dma_init(),否则触发不了中断
  * 修改记录 ：无
 ******************************************************************************/
 #include "hnit_dcmi.h" 
@@ -26,12 +27,12 @@ void dcmi_config(void)
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB | 
                            RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOE, ENABLE);
     RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_DCMI,ENABLE);
-    //PA4/6初始化设置
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4|GPIO_Pin_6;//PA4/6   复用功能输出
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; //复用功能输出
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
+  
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4|GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 	   
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7|GPIO_Pin_6;
@@ -55,20 +56,20 @@ void dcmi_config(void)
 
     DCMI_DeInit();//清除原来的设置 
  
-    DCMI_InitStructure.DCMI_CaptureMode=DCMI_CaptureMode_Continuous;//连续模式
-    DCMI_InitStructure.DCMI_CaptureRate=DCMI_CaptureRate_All_Frame;//全帧捕获
-    DCMI_InitStructure.DCMI_ExtendedDataMode= DCMI_ExtendedDataMode_8b;//8位数据格式  
-    DCMI_InitStructure.DCMI_HSPolarity= DCMI_HSPolarity_Low;//HSYNC 低电平有效
-    DCMI_InitStructure.DCMI_PCKPolarity= DCMI_PCKPolarity_Rising;//PCLK 上升沿有效
-    DCMI_InitStructure.DCMI_SynchroMode= DCMI_SynchroMode_Hardware;//硬件同步HSYNC,VSYNC
-    DCMI_InitStructure.DCMI_VSPolarity=DCMI_VSPolarity_High;//VSYNC 低电平有效
+    DCMI_InitStructure.DCMI_CaptureMode=DCMI_CaptureMode_Continuous;      //连续模式
+    DCMI_InitStructure.DCMI_CaptureRate=DCMI_CaptureRate_All_Frame;       //全帧捕获
+    DCMI_InitStructure.DCMI_ExtendedDataMode= DCMI_ExtendedDataMode_8b;   //8位数据格式  
+    DCMI_InitStructure.DCMI_HSPolarity= DCMI_HSPolarity_Low;              //HSYNC 低电平有效
+    DCMI_InitStructure.DCMI_PCKPolarity= DCMI_PCKPolarity_Rising;         //PCLK 上升沿有效
+    DCMI_InitStructure.DCMI_SynchroMode= DCMI_SynchroMode_Hardware;       //硬件同步HSYNC,VSYNC
+    DCMI_InitStructure.DCMI_VSPolarity=DCMI_VSPolarity_High;              //VSYNC 低电平有效
     DCMI_Init(&DCMI_InitStructure);
-	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;//抢占优先级1
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化NVIC寄存器
-    DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);//开启帧中断     
+	  NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;               //抢占优先级1
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		                  //子优先级3
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			                  //IRQ通道使能
+    NVIC_Init(&NVIC_InitStructure);
+    DCMI_ITConfig(DCMI_IT_FRAME,ENABLE);  //开启帧中断     
 } 
 
 /**
@@ -81,7 +82,6 @@ void dcmi_config(void)
 void dcmi_dma_init(u32 DMA_Memory0BaseAddr, u16 DMA_BufferSize, u16 DMA_Memory0Inc)
 { 
     DMA_InitTypeDef  DMA_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
       
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2,ENABLE); //DMA2时钟使能 
     DMA_DeInit(DMA2_Stream1);
@@ -90,14 +90,14 @@ void dcmi_dma_init(u32 DMA_Memory0BaseAddr, u16 DMA_BufferSize, u16 DMA_Memory0I
     //配置 DMA Stream
     DMA_InitStructure.DMA_Channel = DMA_Channel_1; 
     DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)&DCMI->DR;    
-    DMA_InitStructure.DMA_Memory0BaseAddr = DMA_Memory0BaseAddr;  //内存地址 
+    DMA_InitStructure.DMA_Memory0BaseAddr = DMA_Memory0BaseAddr;          //内存地址 
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;       
-    DMA_InitStructure.DMA_BufferSize = DMA_BufferSize;            //数据传输量 
+    DMA_InitStructure.DMA_BufferSize = DMA_BufferSize;                    //数据传输量 
     DMA_InitStructure.DMA_PeripheralInc = DMA_MemoryInc_Disable;
-    DMA_InitStructure.DMA_MemoryInc = DMA_Memory0Inc;      //内存自增
+    DMA_InitStructure.DMA_MemoryInc = DMA_Memory0Inc;                     //内存自增方式
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
     DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;            // 使用循环模式 
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;                       // 使用循环模式 
     DMA_InitStructure.DMA_Priority = DMA_Priority_High;
     DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Enable; 
     DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
@@ -105,12 +105,6 @@ void dcmi_dma_init(u32 DMA_Memory0BaseAddr, u16 DMA_BufferSize, u16 DMA_Memory0I
     DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;   //外设突发单次传输
     DMA_Init(DMA2_Stream1, &DMA_InitStructure);
                     
-    NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn ;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
-    DMA_ITConfig(DMA2_Stream1,DMA_IT_TC,ENABLE); 
     DCMI_Cmd(ENABLE);	             //DCMI使能       
 }
 
@@ -133,7 +127,7 @@ void dcmi_start(void)
 void dcmi_stop(void)
 { 
     DCMI_CaptureCmd(DISABLE);       //DCMI捕获使关闭
-    while(DCMI->CR&0X01);		    //等待传输结束  	
+    while(DCMI->CR&0X01);           //等待传输结束  	
     DMA_Cmd(DMA2_Stream1,DISABLE);  //关闭DMA2,Stream1
 } 
 

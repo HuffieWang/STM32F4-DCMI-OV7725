@@ -1,15 +1,18 @@
 /*********************** HNIT 3103 Application Team **************************
  * 文 件 名 ：hnit_lcd.h
- * 描    述 ：TFT液晶显示    
+ * 描    述 ：ILI9341液晶显示    
  * 实验平台 ：STM32F407开发板
  * 库 版 本 ：ST1.4.0
  * 时    间 ：2016.3.20
  * 原 作 者 ：正点原子 www.opendv.com
- * 修改记录 ：1. 2016.3.20  3103创新团队
- *               - 新增黑白图像显示函数LCD_DisImg();
- *               - 新增简便数字显示函数LCD_DisNum();
- *            2. 2016.4.9   3103创新团队
+ * 修改记录 ：1. 2016.3.20  3103创新团队 王昱霏
+ *               - 新增黑白图像显示函数lcd_show_image();
+ *               - 新增简便数字显示函数lcd_show_num();
+ *            2. 2016.4.9   3103创新团队 王昱霏
  *               - 修改了LCD_DisNum()不能显示数字0的BUG;
+ *            3. 2016.4.19  3103创新团队 王昱霏
+ *               - 因显示摄像头图像要用扫描方向5，而显示数字和图像需用方向3，
+ *                 所以在lcd_show_image()和lcd_show_num()中加入扫描方向切换。
 ******************************************************************************/
 
 #include "hnit_lcd.h"
@@ -36,7 +39,7 @@ void lcd_show_image(uint16_t m[80][80])
     {
         for(n = 0; n < 3; n++)
         {           
-            LCD_SetCursor(0, i*3+n);  // 设置光标位置                   
+            lcd_set_cursor(0, i*3+n);  // 设置光标位置                   
             lcd_write_ram_prepare();   // 开始写入GRAM     
             for(j = 0; j < 80; j++)
             {
@@ -192,7 +195,7 @@ u16 LCD_ReadPoint(u16 x,u16 y)
 {
  	vu16 r=0,g=0,b=0;
 	if(x>=lcddev.width||y>=lcddev.height)return 0;	//超过了范围,直接返回		   
-	LCD_SetCursor(x,y);	    
+	lcd_set_cursor(x,y);	    
 	if(lcddev.id==0X9341||lcddev.id==0X6804||lcddev.id==0X5310)LCD_WR_REG(0X2E);//9341/6804/3510 发送读GRAM指令
 	else if(lcddev.id==0X5510)LCD_WR_REG(0X2E00);	//5510 发送读GRAM指令
 	else LCD_WR_REG(R34);      		 				//其他IC发送读GRAM指令
@@ -231,7 +234,7 @@ void LCD_DisplayOff(void)
 //设置光标位置
 //Xpos:横坐标
 //Ypos:纵坐标
-void LCD_SetCursor(u16 Xpos, u16 Ypos)
+void lcd_set_cursor(u16 Xpos, u16 Ypos)
 {	 
  	if(lcddev.id==0X9341||lcddev.id==0X5310)
 	{		    
@@ -419,7 +422,7 @@ void lcd_scan_dir(u8 dir)
 //POINT_COLOR:此点的颜色
 void LCD_DrawPoint(u16 x,u16 y)
 {
-	LCD_SetCursor(x,y);		//设置光标位置 
+	lcd_set_cursor(x,y);		//设置光标位置 
 	lcd_write_ram_prepare();	//开始写入GRAM
 	LCD->LCD_RAM=POINT_COLOR; 
 }
@@ -586,14 +589,14 @@ void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height)
 		LCD_WriteReg(heareg,heaval);
 		LCD_WriteReg(vsareg,vsaval);
 		LCD_WriteReg(veareg,veaval);		
-		LCD_SetCursor(sx,sy);	//设置光标位置
+		lcd_set_cursor(sx,sy);	//设置光标位置
 	}
 }
 
 //初始化lcd
 //该初始化函数可以初始化各种ILI93XX液晶,但是其他函数是基于ILI9320的!!!
 //在其他型号的驱动芯片上没有测试! 
-void lcd_init(void)
+void fsmc_lcd_init(void)
 { 	
 	vu32 i=0;
 	
@@ -2625,11 +2628,11 @@ void lcd_clear(u16 color)
  		lcddev.dir=0;	 
  		lcddev.setxcmd=0X2A;
 		lcddev.setycmd=0X2B;  	 			
-		LCD_SetCursor(0x00,0x0000);		//设置光标位置  
+		lcd_set_cursor(0x00,0x0000);		//设置光标位置  
  		lcddev.dir=1;	 
   		lcddev.setxcmd=0X2B;
 		lcddev.setycmd=0X2A;  	 
- 	}else LCD_SetCursor(0x00,0x0000);	//设置光标位置 
+ 	}else lcd_set_cursor(0x00,0x0000);	//设置光标位置 
 	lcd_write_ram_prepare();     		//开始写入GRAM	 	  
 	for(index=0;index<totalpoint;index++)
 	{
@@ -2664,7 +2667,7 @@ void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
 		xlen=ex-sx+1;	 
 		for(i=sy;i<=ey;i++)
 		{
-		 	LCD_SetCursor(sx,i);      				//设置光标位置 
+		 	lcd_set_cursor(sx,i);      				//设置光标位置 
 			lcd_write_ram_prepare();     			//开始写入GRAM	  
 			for(j=0;j<xlen;j++)LCD->LCD_RAM=color;	//显示颜色 	    
 		}
@@ -2682,7 +2685,7 @@ void LCD_Color_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 *color)
 	height=ey-sy+1;			//高度
  	for(i=0;i<height;i++)
 	{
- 		LCD_SetCursor(sx,sy+i);   	//设置光标位置 
+ 		lcd_set_cursor(sx,sy+i);   	//设置光标位置 
 		lcd_write_ram_prepare();     //开始写入GRAM
 		for(j=0;j<width;j++)LCD->LCD_RAM=color[i*width+j];//写入数据 
 	}		  
