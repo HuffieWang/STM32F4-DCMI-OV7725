@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\STM32-HNIT.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\STM32-HNIT.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Wed Apr 20 11:22:47 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Wed Apr 20 19:11:09 2016
 <BR><P>
 <H3>Maximum Stack Usage =        264 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1124,7 +1124,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[98]"></a>lcd_write_ram_prepare</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, hnit_lcd.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Color_Fill
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fill
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear
@@ -1139,7 +1139,7 @@ Global Symbols
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WR_DATA
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_WriteReg
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_IRQHandler
+<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Color_Fill
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_Fill
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_clear
@@ -1406,7 +1406,6 @@ Global Symbols
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_CaptureCmd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_IRQHandler
 </UL>
 
 <P><STRONG><a name="[d1]"></a>dcmi_stop</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, hnit_dcmi.o(.text))
@@ -1436,19 +1435,16 @@ Global Symbols
 
 <P><STRONG><a name="[176]"></a>sram_read_buffer</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, hnit_sram.o(.text), UNUSED)
 
-<P><STRONG><a name="[5a]"></a>DCMI_IRQHandler</STRONG> (Thumb, 100 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = DCMI_IRQHandler &rArr; lcd_set_cursor &rArr; LCD_WriteReg
+<P><STRONG><a name="[5a]"></a>DCMI_IRQHandler</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = DCMI_IRQHandler &rArr; dcmi_stop
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_ClearITPendingBit
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DCMI_GetITStatus
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_stop
-<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_start
-<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_set_cursor
-<LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
-<P><STRONG><a name="[70]"></a>main</STRONG> (Thumb, 114 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[70]"></a>main</STRONG> (Thumb, 252 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 264 + Unknown Stack Size
 <LI>Call Chain = main &rArr; fsmc_lcd_init &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -1459,6 +1455,8 @@ Global Symbols
 <LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dcmi_config
 <LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ov7725_init
 <LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fsmc_lcd_init
+<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_set_cursor
+<LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_write_ram_prepare
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_gpio_config
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_gpio_config
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usart1_init

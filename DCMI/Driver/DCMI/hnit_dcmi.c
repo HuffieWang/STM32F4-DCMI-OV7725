@@ -64,7 +64,7 @@ void dcmi_config(void)
     DCMI_InitStructure.DCMI_SynchroMode= DCMI_SynchroMode_Hardware;       //硬件同步HSYNC,VSYNC
     DCMI_InitStructure.DCMI_VSPolarity=DCMI_VSPolarity_High;              //VSYNC 低电平有效
     DCMI_Init(&DCMI_InitStructure);
-	  NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;               //抢占优先级1
     NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		                  //子优先级3
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			                  //IRQ通道使能
